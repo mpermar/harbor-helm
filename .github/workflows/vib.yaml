@@ -159,7 +159,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: static-analysis-assets-${{ matrix.platform }}.zip
+          name: k8s-verify-assets-${{ matrix.platform }}.zip
           path: |
             outputs-${{ matrix.platform }}/execution_graph-${{ github.sha }}.json
             outputs-${{ matrix.platform }}/execution_graph-${{ github.sha }}-report.json
