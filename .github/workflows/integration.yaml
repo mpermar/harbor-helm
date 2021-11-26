@@ -1,9 +1,5 @@
 name: Integration test
 
-on:
-  pull_request:
-  push:
-
 jobs:
   integration-test:
     runs-on: ubuntu-latest

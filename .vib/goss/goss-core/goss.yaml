@@ -1,0 +1,12 @@
+file:
+  /harbor/harbor_core:
+    exists: true
+    mode: "0755"
+command:
+  harbor-core-running:
+    exec: top -b -n 1
+    exit-status: 0
+    stdout:
+      - harbor_core
+    stderr: []
+    timeout: 50000

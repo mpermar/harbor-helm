@@ -1,0 +1,7 @@
+expose:
+  type: loadBalancer
+  tls:
+    auto:
+      commonName: "example"
+
+harborAdminPassword: "S39BKWjSkh"

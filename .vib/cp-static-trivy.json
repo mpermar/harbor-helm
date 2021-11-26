@@ -1,0 +1,50 @@
+{
+  "phases": {
+    "package": {
+      "context": {
+        "resources": {
+          "url": "HELM_CHART",
+          "path": "/harbor"
+        }
+      },
+      "actions": [
+        {
+          "action_id": "linter-packaging",
+          "params": {
+            "kind": "HELM"
+          }
+        }
+      ]
+    },
+    "verify": {
+      "context": {
+        "resources": {
+          "url": "HELM_CHART",
+          "path": "/harbor"
+        },
+        "application": {
+          "kind": "HELM",
+          "details": {
+            "name": "harbor",
+            "version": "1.8.0",
+            "repository": {
+              "url": "https://helm.goharbor.io/"
+            }
+          },
+          "values": "ZXhwb3NlOgogIHR5cGU6IGxvYWRCYWxhbmNlcgogIHRsczoKICAgIGF1dG86CiAgICAgIGNvbW1vbk5hbWU6ICJleGFtcGxlIgoKaGFyYm9yQWRtaW5QYXNzd29yZDogIlMzOUJLV2pTa2giCmltYWdlcy5yZWdpc3RyeTogImhhcmJvci1yZXBvLnZtd2FyZS5jb20vZG9ja2VyaHViLXByb3h5LWNhY2hlIgo="
+        }
+      },
+      "actions": [
+        {
+          "action_id": "trivy",
+          "params": {
+            "config": {
+              "threshold": "CRITICAL",
+              "vuln_type": ["OS"]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

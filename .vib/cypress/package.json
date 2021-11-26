@@ -1,0 +1,14 @@
+{
+  "name": "harbor-cypress-tests",
+  "version": "0.1.0",
+  "description": "E2E testing for Harbor 1.8.0 in Cypress",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "cy:run": "cypress run -C cypress.json",
+    "cy:open": "cypress open -C cypress.json"
+  },
+  "devDependencies": {
+    "cypress": "^8.7.0"
+  }
+}

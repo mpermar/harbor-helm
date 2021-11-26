@@ -1,0 +1,26 @@
+file:
+  /usr/bin/registry_DO_NOT_USE_GC:
+    exists: true
+    mode: "0755"
+command:
+  harbor-registry-version:
+    exec: /usr/bin/registry_DO_NOT_USE_GC --version
+    exit-status: 0
+    stdout:
+      - v2.7.1.m
+    stderr: []
+    timeout: 50000
+  harbor-registry-help:
+    exec: /usr/bin/registry_DO_NOT_USE_GC --help
+    exit-status: 0
+    stdout:
+      - help for registry
+    stderr: []
+    timeout: 50000
+  harbor-registry-running:
+    exec: top -b -n 1
+    exit-status: 0
+    stdout:
+      - registry_DO_NOT_USE_GC
+    stderr: []
+    timeout: 50000

@@ -1,0 +1,12 @@
+file:
+  /usr/bin/notary-signer:
+    exists: true
+    mode: "0755"
+command:
+  harbor-signer-running:
+    exec: top -b -n 1
+    exit-status: 0
+    stdout:
+      - notary-signer
+    stderr: []
+    timeout: 50000

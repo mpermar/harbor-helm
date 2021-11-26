@@ -1,0 +1,8 @@
+{
+  "env": {
+    "adminusername": "admin",
+    "adminpassword": "mytestpassword",
+    "username": "user",
+    "password": "myusertestpassword"
+  }
+}
