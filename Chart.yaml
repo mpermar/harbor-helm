@@ -18,5 +18,7 @@ maintainers:
 - name: Weiwei He
   email: hweiwei@vmware.com
 - name: Qian Deng
+  email: dengq@vmware.com  
+- name: Qian Deng
   email: dengq@vmware.com
 engine: gotpl
