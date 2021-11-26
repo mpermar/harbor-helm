@@ -47,12 +47,12 @@ jobs:
           filename="${{ steps.lookup_version.outputs.result }}-$shm_id.tar.gz"
           mv ./harbor/${{ steps.lookup_version.outputs.result }}.tgz "$filename"
           chart_uri="https://martinpe.jfrog.io/artifactory/default-generic-local/$filename"
-          curl -s -H "Authorization: Bearer $ARTIFACTORY_AUTH" -T "$filename" $chart_uri
+          curl -s -H "Authorization: Bearer $ARTIFACTORY_TOKEN" -T "$filename" $chart_uri
           echo "Setting output to $chart_uri"
           echo ::set-output name=chart_uri::"$chart_uri"
         shell: bash
         env: 
-          ARTIFACTORY_AUTH: ${{ secrets.ARTIFACTORY_AUTH }}
+          ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
     outputs:
       chart_uri: ${{ steps.vib_build.outputs.chart_uri }}
 
