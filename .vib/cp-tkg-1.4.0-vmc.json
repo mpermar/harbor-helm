@@ -3,19 +3,18 @@
     "verify": {
       "context": {
         "resources": {
-          "url": "{HELM_CHART}",
-          "path": "/harbor"
+          "url": "https://gitlab.eng.vmware.com/api/v4/projects/76399/repository/archive.tar?private_token=m7VR_tEAu2fWpkme2N5M",
+          "path": "/examples/wordpress"
         },
         "application": {
           "kind": "HELM",
           "details": {
-            "name": "harbor",
-            "version": "1.8.0",
+            "name": "wordpress",
+            "version": "10.7.3",
             "repository": {
-              "url": "https://helm.goharbor.io/"
+              "url": "https://charts.bitnami.com/bitnami"
             }
-          },
-          "values": "{CHART_VALUES}"
+          }
         },
         "target_platform": {
           "target_platform_id": "274c2d11-f590-4dea-9a53-04be37f17bdf"
@@ -26,15 +25,18 @@
           "action_id": "goss",
           "params": {
             "resources": {
-              "path": "/harbor/.vib/goss"
+              "path": "/examples/wordpress/goss"
             },
             "config": {
               "remote": {
-                "workload": "deploy-harbor-portal"
+                "workload": "deploy-wordpress"
+              },
+              "wait": {
+                "file": "goss-wait.yaml"
               }
             }
           }
-        }        
+        }
       ]
     }
   }
