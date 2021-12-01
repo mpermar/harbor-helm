@@ -18,7 +18,7 @@
           "values": "{CHART_VALUES}"
         },
         "target_platform": {
-          "target_platform_id": "7ddab896-2e4e-4d58-a501-f79897eba3a0",
+          "target_platform_id": "274c2d11-f590-4dea-9a53-04be37f17bdf",
           "size": {
             "name": "L8",
             "worker_nodes_instance_count": 3,
@@ -28,27 +28,18 @@
       },
       "actions": [
         {
-          "action_id": "health-check",
-          "params": {
-            "endpoint": "lb-harbor-https"
-          }
-        },
-        {
-          "action_id": "cypress",
+          "action_id": "goss",
           "params": {
             "resources": {
-              "path": "/harbor/.vib/cypress"
-            },  
+              "path": "/examples/harbor/goss/goss-registry"
+            },
             "config": {
-              "endpoint": "lb-harbor-https",
-              "app_protocol": "HTTPS",
-              "env": {
-                "adminusername": "admin",
-                "adminpassword": "S39BKWjSkh"
+              "remote": {
+                "workload": "deploy-harbor-registry"
               }
             }
           }
-        }
+        }        
       ]
     }
   }
