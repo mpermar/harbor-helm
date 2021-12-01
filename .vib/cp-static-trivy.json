@@ -19,7 +19,7 @@
     "verify": {
       "context": {
         "resources": {
-          "url": "HELM_CHART",
+          "url": "{HELM_CHART}",
           "path": "/harbor"
         },
         "application": {
