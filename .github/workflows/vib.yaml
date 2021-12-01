@@ -119,7 +119,7 @@ jobs:
     needs: [vib-prepare,vib-validate]
     strategy:
       matrix:
-        platform: [tkg,gke,aks]
+        platform: [tkg-1.3.0-aws,tkg-1.4.0-vmc,gke,aks]
       fail-fast: false
     env: 
       PIPELINE: ./harbor/.vib/cp-${{ matrix.platform }}.json
