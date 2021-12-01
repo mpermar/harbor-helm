@@ -56,6 +56,10 @@ function check {
     curl -s -H "Content-Type: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}" "${url}" > output.json
 
     actionStatus=$(action="$action" phase="$phase" jq -r '.tasks[] | select( (.action_id==env.action) and (.phase==env.phase)).status' output.json)
+    if [ -z "$actionStatus" ]; then
+      echo "Action $action has not been enabled on this pipeline. Skipping..."
+      return 0
+    fi
     echo "Status for action $action is $actionStatus"
     if [ "$actionStatus" = "SUCCEEDED" ]; then
       exit 0;

@@ -158,6 +158,16 @@ jobs:
         run: |
           echo "Execution graph id: ${{ steps.vib_verify_pipeline.outputs.execution_graph_id }}"
           ./harbor/.vib/scripts/vib-check.sh --url="${{ steps.vib_verify_pipeline.outputs.execution_graph_id }}" --phase=VERIFY --action=cypress --interval=30 --timeout=2800
+      - name: Server Tests
+        id: vib-goss
+        run: |
+          echo "Execution graph id: ${{ steps.vib_verify_pipeline.outputs.execution_graph_id }}"
+          ./harbor/.vib/scripts/vib-check.sh --url="${{ steps.vib_verify_pipeline.outputs.execution_graph_id }}" --phase=VERIFY --action=goss --interval=30 --timeout=2800
+      - name: Resilience Tests
+        id: vib-resilience-tests
+        run: |
+          echo "Execution graph id: ${{ steps.vib_verify_pipeline.outputs.execution_graph_id }}"
+          ./harbor/.vib/scripts/vib-check.sh --url="${{ steps.vib_verify_pipeline.outputs.execution_graph_id }}" --phase=VERIFY --action=resilience-tests --interval=30 --timeout=2800
       - name: Download Execution Graph
         id: vib_download
         if: always()
