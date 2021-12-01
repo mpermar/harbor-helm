@@ -26,11 +26,11 @@
           "action_id": "goss",
           "params": {
             "resources": {
-              "path": "/examples/harbor/goss/goss-registry"
+              "path": "/harbor/.vib/goss/goss-portal"
             },
             "config": {
               "remote": {
-                "workload": "deploy-harbor-registry"
+                "workload": "deploy-harbor-portal"
               }
             }
           }
