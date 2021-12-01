@@ -3,6 +3,7 @@ name: VMware Image Builder
 on:
   workflow_dispatch:
   push:
+  pull_request:
 
 jobs:
 #### START: TO BE REPLACED BY VIB PACKAGING ###
