@@ -3,7 +3,7 @@
     "verify": {
       "context": {
         "resources": {
-          "url": "HELM_CHART",
+          "url": "{HELM_CHART}",
           "path": "/harbor"
         },
         "application": {
@@ -15,7 +15,7 @@
               "url": "https://helm.goharbor.io/"
             }
           },
-          "values": "ZXhwb3NlOgogIHR5cGU6IGxvYWRCYWxhbmNlcgogIHRsczoKICAgIGF1dG86CiAgICAgIGNvbW1vbk5hbWU6ICJleGFtcGxlIgoKaGFyYm9yQWRtaW5QYXNzd29yZDogIlMzOUJLV2pTa2giCmltYWdlcy5yZWdpc3RyeTogImhhcmJvci1yZXBvLnZtd2FyZS5jb20vZG9ja2VyaHViLXByb3h5LWNhY2hlIgo="
+          "values": "{CHART_VALUES}"
         },
         "target_platform": {
           "target_platform_id": "7ddab896-2e4e-4d58-a501-f79897eba3a0",

@@ -75,8 +75,12 @@ jobs:
       - name: Send VIB Pipeline
         id: vib_validate_pipeline
         run: |        
-          echo "Reading pipeline from $CHART_URI"
+          echo "Reading pipeline from $CHART_URI..."
           awk '{sub("HELM_CHART", uri)}1' uri="$CHART_URI" $PIPELINE > pipeline.json
+          echo "Updating values..."
+          export CHART_VALUES=$(base64 ./harbor/.vib/chart-values.yml)
+          awk '{sub("CHART_VALUES", values)}1' values="$CHART_VALUES" $PIPELINE > pipeline.json
+          echo "We will send this pipeline:"
           cat pipeline.json
           EXECUTION_GRAPH_URI=$(./harbor/.vib/scripts/vib-send.sh --pipeline=pipeline.json)          
           echo "Created new execution graph: ${EXECUTION_GRAPH_URI}"

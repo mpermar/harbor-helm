@@ -3,19 +3,15 @@
     "verify": {
       "context": {
         "resources": {
-          "url": "HELM_CHART",
+          "url": "{HELM_CHART}",
           "path": "/harbor"
         },
         "application": {
           "kind": "HELM",
           "details": {
-            "name": "harbor",
-            "version": "1.8.0",
-            "repository": {
-              "url": "https://helm.goharbor.io/"
-            }
+            "package": "{HELM_CHART}"
           },
-          "values": "ZXhwb3NlOgogIHR5cGU6IGxvYWRCYWxhbmNlcgogIHRsczoKICAgIGF1dG86CiAgICAgIGNvbW1vbk5hbWU6ICJleGFtcGxlIgoKaGFyYm9yQWRtaW5QYXNzd29yZDogIlMzOUJLV2pTa2giCmltYWdlcy5yZWdpc3RyeTogImhhcmJvci1yZXBvLnZtd2FyZS5jb20vZG9ja2VyaHViLXByb3h5LWNhY2hlIgo="
+          "values": "{CHART_VALUES}"
         },
         "target_platform": {
           "target_platform_id": "7b13a7bb-011c-474f-ad71-8152fc321b9e",
@@ -48,7 +44,29 @@
               }
             }
           }
-        }
+        },
+        {
+          "action_id": "resilience-tests",
+          "params": {
+            "test_cases": [
+              "testKubernetesPodDelete",
+              "testHelmChartDeleteAndDeploy"
+            ]
+          }
+        },
+        {
+          "action_id": "goss",
+          "params": {
+            "resources": {
+              "path": "/examples/harbor/goss/goss-registry"
+            },
+            "config": {
+              "remote": {
+                "workload": "deploy-harbor-registry"
+              }
+            }
+          }
+        }        
       ]
     }
   }
