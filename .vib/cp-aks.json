@@ -9,7 +9,10 @@
         "application": {
           "kind": "HELM",
           "details": {
-            "package": "{HELM_CHART}"
+            "name": "harbor",
+            "package": {
+              "url": "{HELM_CHART}"
+            }
           },
           "values": "{CHART_VALUES}"
         },
