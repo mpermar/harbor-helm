@@ -36,8 +36,9 @@ function download {
     for task in $(jq -r '.tasks[].task_id' $filename); do
       taskname=$(action="$task" jq -r '.tasks[] | select(.task_id==env.action).action_id' $filename)
       lowtime=${task:0:8}
-      echo "Fetching logs for task ${taskname}"
       taskurl="${url}/tasks/$task/logs/raw"
+      taskPublicUrl=$(echo $taskurl | sed -e "s/cp.bromelia.vmware.com/cp.production.k.bromelia.bitnami.net/g")
+      echo "Fetching logs for task ${taskname} from ${taskPublicUrl}"
       curl -s -H "Content-Type: application/json" -H "Authorization: Bearer ${BEARER_TOKEN}" "${taskurl}" > "$output/$taskname-$lowtime-logs.txt"
     done
 }

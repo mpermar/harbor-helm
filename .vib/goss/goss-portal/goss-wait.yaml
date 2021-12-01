@@ -1,0 +1,6 @@
+command:
+  wait-to-be-available:
+    exec: "sleep 120"
+    exit-status: 0
+    timeout: 130000
+

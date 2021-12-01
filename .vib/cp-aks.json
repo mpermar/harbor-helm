@@ -67,7 +67,10 @@
               "remote": {
                 "workload": "deploy-harbor-portal"
               }
-            }
+            },
+            "wait": {
+              "file": "goss-wait.yaml"
+            }              
           }
         }        
       ]
