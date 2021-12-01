@@ -61,16 +61,13 @@
           "action_id": "goss",
           "params": {
             "resources": {
-              "path": "/harbor/.vib/goss/goss-portal"
+              "path": "/harbor/.vib/goss"
             },
             "config": {
               "remote": {
                 "workload": "deploy-harbor-portal"
               }
-            },
-            "wait": {
-              "file": "goss-wait.yaml"
-            }              
+            }
           }
         }        
       ]
