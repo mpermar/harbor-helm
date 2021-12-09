@@ -9,6 +9,9 @@
       },
       "actions": [
         {
+          "action_id": "helm-package"
+        },
+        {
           "action_id": "linter-packaging",
           "params": {
             "kind": "HELM"
@@ -24,13 +27,6 @@
         },
         "application": {
           "kind": "HELM",
-          "details": {
-            "name": "harbor",
-            "version": "1.8.0",
-            "repository": {
-              "url": "https://helm.goharbor.io/"
-            }
-          },
           "values": "{CHART_VALUES}"
         }
       },
