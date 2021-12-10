@@ -37,7 +37,7 @@
           "action_id": "cypress",
           "params": {
             "resources": {
-              "path": "/harbor/.vib/cypress"
+              "path": "/.vib/cypress"
             },  
             "config": {
               "endpoint": "lb-harbor-https",
