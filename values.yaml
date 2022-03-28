@@ -44,6 +44,7 @@ expose:
     controller: default
     ## Allow .Capabilities.KubeVersion.Version to be overridden while creating ingress
     kubeVersionOverride: ""
+    className: ""
     annotations:
       # note different ingress controllers may require a different ssl-redirect annotation
       # for Envoy, use ingress.kubernetes.io/force-ssl-redirect: "true" and remove the nginx lines below
@@ -52,11 +53,15 @@ expose:
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
     notary:
-      # notary-specific annotations
+      # notary ingress-specific annotations
       annotations: {}
+      # notary ingress-specific labels
+      labels: {}
     harbor:
       # harbor ingress-specific annotations
       annotations: {}
+      # harbor ingress-specific labels
+      labels: {}
   clusterIP:
     # The name of ClusterIP service
     name: harbor
@@ -216,18 +221,21 @@ persistence:
       subPath: ""
       accessMode: ReadWriteOnce
       size: 5Gi
+      annotations: {}
     chartmuseum:
       existingClaim: ""
       storageClass: ""
       subPath: ""
       accessMode: ReadWriteOnce
       size: 5Gi
+      annotations: {}
     jobservice:
       existingClaim: ""
       storageClass: ""
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
+      annotations: {}
     # If external database is used, the following settings for database will
     # be ignored
     database:
@@ -236,6 +244,7 @@ persistence:
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
+      annotations: {}
     # If external Redis is used, the following settings for Redis will
     # be ignored
     redis:
@@ -244,12 +253,14 @@ persistence:
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
+      annotations: {}
     trivy:
       existingClaim: ""
       storageClass: ""
       subPath: ""
       accessMode: ReadWriteOnce
       size: 5Gi
+      annotations: {}
   # Define which storage backend is used for registry and chartmuseum to store
   # images and charts. Refer to
   # https://github.com/docker/distribution/blob/master/docs/configuration.md#storage
@@ -373,6 +384,9 @@ proxy:
     - jobservice
     - trivy
 
+# Run the migration job via helm hook
+enableMigrateHelmHook: false
+
 # The custom ca bundle secret, the secret must contain key named "ca.crt"
 # which will be injected into the trust store for chartmuseum, core, jobservice, registry, trivy components
 # caBundleSecretName: ""
@@ -394,6 +408,7 @@ nginx:
   # mount the service account token
   automountServiceAccountToken: false
   replicas: 1
+  revisionHistoryLimit: 10
   # resources:
   #  requests:
   #    memory: 256Mi
@@ -415,6 +430,7 @@ portal:
   # mount the service account token
   automountServiceAccountToken: false
   replicas: 1
+  revisionHistoryLimit: 10
   # resources:
   #  requests:
   #    memory: 256Mi
@@ -436,6 +452,7 @@ core:
   # mount the service account token
   automountServiceAccountToken: false
   replicas: 1
+  revisionHistoryLimit: 10
   ## Startup probe values
   startupProbe:
     enabled: true
@@ -464,12 +481,17 @@ core:
   xsrfKey: ""
   ## The priority class to run the pod as
   priorityClassName:
+  # The time duration for async update artifact pull_time and repository
+  # pull_count, the unit is second. Will be 10 seconds if it isn't set.
+  # eg. artifactPullAsyncFlushDuration: 10
+  artifactPullAsyncFlushDuration:
 
 jobservice:
   image:
     repository: goharbor/harbor-jobservice
     tag: dev
   replicas: 1
+  revisionHistoryLimit: 10
   # set the service account to be used, default if left empty
   serviceAccountName: ""
   # mount the service account token
@@ -480,6 +502,8 @@ jobservice:
     - file
     # - database
     # - stdout
+  # The jobLogger sweeper duration (ignored if `jobLogger` is `stdout`)
+  loggerSweeperDuration: 14 #days
 
   # resources:
   #   requests:
@@ -520,6 +544,7 @@ registry:
     #    memory: 256Mi
     #    cpu: 100m
   replicas: 1
+  revisionHistoryLimit: 10
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -538,7 +563,8 @@ registry:
   credentials:
     username: "harbor_registry_user"
     password: "harbor_registry_password"
-
+    # Login and password in htpasswd string format. Excludes `registry.credentials.username`  and `registry.credentials.password`. May come in handy when integrating with tools like argocd or flux. This allows the same line to be generated each time the template is rendered, instead of the `htpasswd` function from helm, which generates different lines each time because of the salt.
+    # htpasswdString: $apr1$XLefHzeG$Xl4.s00sMSCCcMyJljSZb0 # example string
   middleware:
     enabled: false
     type: cloudFront
@@ -550,6 +576,14 @@ registry:
       # The secret key that should be present is CLOUDFRONT_KEY_DATA, which should be the encoded private key
       # that allows access to CloudFront
       privateKeySecret: "my-secret"
+  # enable purge _upload directories
+  upload_purging:
+    enabled: true
+    # remove files in _upload directories which exist for a period of time, default is one week.
+    age: 168h
+    # the interval of the purge operations
+    interval: 24h
+    dryrun: false
 
 chartmuseum:
   enabled: true
@@ -563,6 +597,7 @@ chartmuseum:
     repository: goharbor/chartmuseum-photon
     tag: dev
   replicas: 1
+  revisionHistoryLimit: 10
   # resources:
   #  requests:
   #    memory: 256Mi
@@ -623,6 +658,14 @@ trivy:
   # If the value is set to `true` you have to manually download the `trivy.db` file and mount it in the
   # `/home/scanner/.cache/trivy/db/trivy.db` path.
   skipUpdate: false
+  # The offlineScan option prevents Trivy from sending API requests to identify dependencies.
+  #
+  # Scanning JAR files and pom.xml may require Internet access for better detection, but this option tries to avoid it.
+  # For example, the offline mode will not try to resolve transitive dependencies in pom.xml when the dependency doesn't
+  # exist in the local repositories. It means a number of detected vulnerabilities might be fewer in offline mode.
+  # It would work if all the dependencies are in local.
+  # This option doesn’t affect DB download. You need to specify skipUpdate as well as offlineScan in an air-gapped environment.
+  offlineScan: false
   # The duration to wait for scan completion
   timeout: 5m0s
   resources:
@@ -794,25 +837,26 @@ redis:
   podAnnotations: {}
 
 exporter:
-    replicas: 1
-  # resources:
-  #  requests:
-  #    memory: 256Mi
-  #    cpu: 100m
-    podAnnotations: {}
-    serviceAccountName: ""
-    # mount the service account token
-    automountServiceAccountToken: false
-    image:
-      repository: goharbor/harbor-exporter
-      tag: dev
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
-    cacheDuration: 23
-    cacheCleanInterval: 14400
-    ## The priority class to run the pod as
-    priorityClassName:
+  replicas: 1
+  revisionHistoryLimit: 10
+# resources:
+#  requests:
+#    memory: 256Mi
+#    cpu: 100m
+  podAnnotations: {}
+  serviceAccountName: ""
+  # mount the service account token
+  automountServiceAccountToken: false
+  image:
+    repository: goharbor/harbor-exporter
+    tag: dev
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  cacheDuration: 23
+  cacheCleanInterval: 14400
+  ## The priority class to run the pod as
+  priorityClassName:
 
 metrics:
   enabled: false
@@ -879,4 +923,3 @@ trace:
     compression: false
     insecure: true
     timeout: 10s
-
